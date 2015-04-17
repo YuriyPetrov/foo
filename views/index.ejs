@@ -1,0 +1,39 @@
+<!DOCTYPE html>  
+<html lang="ru">  
+  <head>
+    <meta charset="utf-8">
+    <title>Pivotal Search</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- styles -->
+    <link href="/stylesheets/style.css" rel="stylesheet">
+
+  </head>
+  <body>
+    <div class="title">
+      <%= title1 %>
+    <br>
+API:<br>
+get /api/item/:item_type - (json) list of elements of type <br>
+get /api/item/:id - (json) get specific element <br>
+post /api/item - (json) adding a record, the response status <br>
+delete /api/item/:id -(json) deleting a record, the response status <br>
+    </div>
+    <form action="/api/item" method="POST">
+      <input type="text" name="item_name"><br>
+      <button>Send</button>
+    </form>
+    <form action="/api/item" method="DELETE">
+      <input type="text" name="id"><br>
+      <button>Delete</button>
+    </form>
+
+    </div>
+  </body>
+</html>  
