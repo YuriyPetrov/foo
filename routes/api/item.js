@@ -9,7 +9,7 @@ var connection = mysql.createConnection({
 var router = express.Router();
 connection.connect();
 
-/* GET id */
+/**GET id */
 router.get('/:id([0-9]+)', function(req, res, next) {
         connection.query('SELECT b.id, b.count, b.medium_description, a.name, a.decription FROM flexmix.item as a, flexmix.item2 as b where a.id=b.id_item and a.id=?',req.params.id, function(err, rows, fields) {
         if (!err) {
@@ -61,21 +61,13 @@ router.post('/', function(req, res, next) {
 router.delete('/:id', function(req, res, next) {
     connection.query('DELETE FROM flexmix.item2 WHERE id_item=?',req.params.id, function(err, recordId){
     if (!err) {
+        connection.query('DELETE FROM flexmix.item WHERE id=?',req.params.id, function(err, recordId){})
         res.send({ status: 'OK'})
         console.log('Record deleted id:',recordId);
     }
         else {
         console.log(err);
     }
-    })
-    connection.query('DELETE FROM flexmix.item WHERE id=?',req.params.id, function(err, recordId){
-        if (!err) {
-            res.send({ status: 'OK'})
-            console.log('Record deleted id:',recordId);
-        }
-        else {
-            console.log(err);
-        }
     })
 });
 
