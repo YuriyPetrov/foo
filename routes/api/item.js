@@ -11,7 +11,7 @@ connection.connect();
 
 /* GET id */
 router.get('/:id([0-9]+)', function(req, res, next) {
-        connection.query('SELECT * FROM flexmix.item_a as a where a.id = ?',req.params.id, function(err, rows, fields) {
+        connection.query('SELECT b.id, b.count, b.medium_description, a.name, a.decription FROM flexmix.item as a, flexmix.item2 as b where a.id=b.id_item and a.id=?',req.params.id, function(err, rows, fields) {
         if (!err) {
             console.log('The solution is: ', rows);
             res.json(rows);
@@ -25,7 +25,7 @@ router.get('/:id([0-9]+)', function(req, res, next) {
 /**Get type*/
 router.get('/:id', function(req, res, next) {
     console.log(req.body);
-    connection.query('SELECT * FROM flexmix.item_a as a where a.item_name= ?',req.params.id, function(err, rows, fields) {
+    connection.query('SELECT b.id, b.count, b.medium_description, a.name, a.decription FROM flexmix.item as a, flexmix.item2 as b where a.id=b.id_item and a.id= ?',req.params.id, function(err, rows, fields) {
         if (!err) {
             console.log('The solution is: ', rows);
             res.json(rows);
@@ -38,22 +38,28 @@ router.get('/:id', function(req, res, next) {
 
 /**Add item*/
 router.post('/', function(req, res, next) {
-    console.log(req.body);
-    connection.query('INSERT INTO flexmix.item_a (item_name) VALUES (?)',req.body.item_name, function(err, recordId){
-    if  (!err){
+    var input = JSON.parse(JSON.stringify(req.body));
+    var data = {
+        name               : input.name,
+        decription         : input.decription,
+        medium_description : input.medium_description,
+        count              : input.count
+    };
+    console.log("fields :",data.name,data.decription,data.medium_description,data.count);
+    connection.query('select flexmix.inserting(?,?,?,?)',[data.name,data.decription,data.medium_description,data.count], function(err, rows){
+        if  (!err){
+            console.log('Inserted ID:', rows);
         res.send({ status: 'OK'})
     }
     else{
         console.log(err);
     }
     })
-   
 });
 
 /**Delete item*/
 router.delete('/:id', function(req, res, next) {
-    console.log(req.body);
-    connection.query('DELETE FROM flexmix.item_a WHERE id=?',req.params.id, function(err, recordId){
+    connection.query('DELETE FROM flexmix.item2 WHERE id_item=?',req.params.id, function(err, recordId){
     if (!err) {
         res.send({ status: 'OK'})
         console.log('Record deleted id:',recordId);
@@ -61,6 +67,15 @@ router.delete('/:id', function(req, res, next) {
         else {
         console.log(err);
     }
+    })
+    connection.query('DELETE FROM flexmix.item WHERE id=?',req.params.id, function(err, recordId){
+        if (!err) {
+            res.send({ status: 'OK'})
+            console.log('Record deleted id:',recordId);
+        }
+        else {
+            console.log(err);
+        }
     })
 });
 
