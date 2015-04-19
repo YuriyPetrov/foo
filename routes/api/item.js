@@ -25,7 +25,7 @@ router.get('/:id([0-9]+)', function(req, res, next) {
 /**Get type*/
 router.get('/:id', function(req, res, next) {
     console.log(req.body);
-    connection.query('SELECT b.id, b.count, b.medium_description, a.name, a.decription FROM flexmix.item as a, flexmix.item2 as b where a.id=b.id_item and a.id= ?',req.params.id, function(err, rows, fields) {
+    connection.query('SELECT b.id, b.count, b.medium_description, a.name, a.decription FROM flexmix.item as a, flexmix.item2 as b where a.id=b.id_item and a.id= ?',req.params.id, function(err, rows) {
         if (!err) {
             console.log('The solution is: ', rows);
             res.json(rows);
@@ -39,6 +39,7 @@ router.get('/:id', function(req, res, next) {
 /**Add item*/
 router.post('/', function(req, res, next) {
     var input = JSON.parse(JSON.stringify(req.body));
+    console.log(input);
     var data = {
         name               : input.name,
         decription         : input.decription,
@@ -48,7 +49,6 @@ router.post('/', function(req, res, next) {
     console.log("fields :",data.name,data.decription,data.medium_description,data.count);
     connection.query('select flexmix.inserting(?,?,?,?)',[data.name,data.decription,data.medium_description,data.count], function(err, rows){
         if  (!err){
-            console.log('Inserted ID:', rows);
         res.send({ status: 'OK'})
     }
     else{

@@ -62,7 +62,7 @@ app.use(function(err, req, res, next) {
 
 request(app)
     .post('/api/item')
-    .send('{"count":"4","medium_description":"medium desc item 1","name":"name1","decription":"name1 desc"}')
+    .send({"name":"name1","decription":"name1 desc", "medium_description":"medium desc item 1", "count":4})
     .expect(200)
     .end(function(err, res){
       if (err) throw err;
